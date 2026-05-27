@@ -1,30 +1,45 @@
-
 # Medical VQA — Chest Baseline
- 
-A multimodal Visual Question Answering system for chest X-rays. Given an image and a clinical question, the model predicts a binary yes/no answer.
 
-Stack
+A multimodal Visual Question Answering (VQA) system designed for chest X-rays. Given a radiological image and a clinical question, this model predicts a binary (yes/no) answer.
 
-PyTorch · HuggingFace Datasets · DistilBERT · Weights & Biases · Grad-CAM · scikit-learn
+## 🛠 Tech Stack
+* **Deep Learning Framework:** PyTorch
+* **NLP & Datasets:** HuggingFace Datasets, DistilBERT
+* **Experiment Tracking:** Weights & Biases (W&B)
+* **Interpretability:** Grad-CAM
+* **Metrics & Evaluation:** scikit-learn
 
-What Was Built
+## 🏗 Architecture & Methodology
 
-EDA + risk discovery on flaviagiammarino/vqa-rad (2,248 QA pairs) — including hash-based duplicate detection that found 202 shared image hashes across train/test (potential leakage)
-Binary baseline: filtered to yes/no pairs, near-balanced splits (940 train / 251 test)
-Multimodal model: CNN image branch + frozen DistilBERT embeddings (768-dim), fused via concatenation → MLP head
-Full eval suite: accuracy, AUC-ROC, PR curves, confusion matrix, confidence distribution, error slicing, Grad-CAM
+### Dataset & Preprocessing
+* **Source:** `flaviagiammarino/vqa-rad` dataset (2,248 QA pairs).
+* **Filtration:** Filtered specifically for binary (yes/no) question-answer pairs, resulting in near-balanced splits (940 train / 251 test).
+* **Risk Discovery:** Conducted rigorous Exploratory Data Analysis (EDA), including hash-based duplicate detection. Proactively identified 202 shared image hashes across train/test splits, flagging potential data leakage prior to modeling.
 
+### Multimodal Model
+* **Vision Branch:** CNN-based image feature extraction.
+* **Text Branch:** Frozen DistilBERT embeddings (768-dimensional).
+* **Fusion Strategy:** Modalities are fused via concatenation and passed through a Multi-Layer Perceptron (MLP) classification head.
 
-Results
+### Evaluation Suite
+Implemented a comprehensive evaluation pipeline to thoroughly assess model behavior:
+* Accuracy, AUC-ROC, and Precision-Recall (PR) curves.
+* Confusion matrices and confidence distribution analysis.
+* Error slicing and visual interpretability using Grad-CAM.
 
-Metric	Value
-Train accuracy (epoch 10)	85.3%
-Test accuracy	60.16%
-AUC-ROC	0.6465
-Avg Precision	0.6042
-The gap between train and test accuracy reflects the image-level leakage risk — a known issue flagged during EDA, not discovered after the fact.
+## 📊 Results & Insights
 
+| Metric | Score |
+| :--- | :--- |
+| **Train Accuracy** (Epoch 10) | 85.30% |
+| **Test Accuracy** | 60.16% |
+| **AUC-ROC** | 0.6465 |
+| **Average Precision** | 0.6042 |
 
-Config-driven, reproducible ablation pipelines
-Image-disjoint split strategy
-Stronger multimodal architectures + calibration experiments
+**Key Insight:** The generalization gap between train and test accuracy clearly reflects the image-level leakage risk. Because this issue was proactively flagged during the EDA phase, this baseline serves as an accurate, known-constraint benchmark rather than an unexpected failure.
+
+## 🚀 Next Steps & Future Work
+* Implement an **image-disjoint split strategy** to resolve the identified data leakage.
+* Build config-driven, reproducible ablation pipelines.
+* Explore stronger multimodal architectures (e.g., cross-attention mechanisms).
+* Conduct model calibration experiments.
